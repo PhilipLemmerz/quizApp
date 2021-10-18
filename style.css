@@ -1,0 +1,23 @@
+#logoDiv {
+    height: 80vh !important;
+    width: 20%;
+    
+}
+
+#quizContent {
+    width: 80%;
+    height: 80vh !important;
+}
+
+body {
+    height: 100vh !important;
+}
+
+#questionText {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.fa-question-circle {
+    background-color: #0d6dfd49;
+}

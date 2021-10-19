@@ -102,7 +102,6 @@ function clickAnswer(){
     }    
 }
 
-
 function insertQuestionAndAnswer() {
     let questionElement = document.getElementById('questionText');
     let answerElements = document.getElementsByClassName('card-text');

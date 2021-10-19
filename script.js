@@ -1,3 +1,7 @@
+/**
+ * Data for QuizApp
+ */
+
 let questions = [
 
     {
@@ -65,3 +69,19 @@ let questions = [
         "rightAnswer": 2
     },
 ]
+
+/**
+ * global variables
+ */
+
+let currentQuestion = 0;
+
+
+/**
+ * functions to insert questionData
+ */
+
+function insertQuestion() {
+    
+}
+

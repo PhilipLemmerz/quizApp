@@ -76,31 +76,24 @@ let questions = [
 
 let currentQuestion = 0;
 let answerCard = document.getElementsByClassName('card');
+let correctAnswers = 0;
 
-
-
-
+/** load autmomaticly after DOM is loaded */
 function init() {
-    insertQuestionAndAnswer();  
-    clickAnswer();   
+    insertQuestionAndAnswer();
 }
 
 /**
- * Events
+ * Event-Listeners
  */
-
 addEventListener('load', init);
+/**Events - click on answerCards */
+document.getElementById('answerBox1').addEventListener('click', answerSelection);
+document.getElementById('answerBox2').addEventListener('click', answerSelection);
+document.getElementById('answerBox3').addEventListener('click', answerSelection);
+document.getElementById('answerBox4').addEventListener('click', answerSelection);
 
-/**Event - click on answer */
-function clickAnswer(){   
-    for (let i = 0; i < answerCard.length; i++) {
-        answerCard[i].addEventListener('click', () => {
-            let indexAnswer = i + 1;
-            answerSelection(indexAnswer);
-                                                
-        });
-    }    
-}
+
 
 function insertQuestionAndAnswer() {
     let questionElement = document.getElementById('questionText');
@@ -111,25 +104,44 @@ function insertQuestionAndAnswer() {
 
     /**Insert the Answers */
     for (i = 0; i < answerElements.length; i++) {
-        answerElements[i].textContent = questions[currentQuestion]['answer' + (i + 1)];
+        answerElements[i].textContent = questions[currentQuestion]['answer' + (i + 1)];        
     }
 }
-/**function evaluate if selected answer is correct */
-function answerSelection(index) {
-    let correctAnswer = questions[currentQuestion]['rightAnswer'];
-    let backgroundElement = document.getElementById('quizContent');
 
-    if (index == correctAnswer) {
-        backgroundElement.style ='background-image: url("https://acegif.com/wp-content/gif/confetti-4.gif")';
-        answerCard[(correctAnswer-1)].style.backgroundColor ='#7cec7c80';
-                       
-    } else {
-        answerCard[(correctAnswer-1)].style.backgroundColor ='#7cec7c80';
-        answerCard[index-1].style.backgroundColor = '#ff003366';
-        
-    }
+
+
+
+
+/**function evaluate if selected answer is correct */
+function answerSelection() {
+    let clickedElementId = this.id;
+    lastCharacterofID = clickedElementId.slice(-1);
+    let correctAnswer = questions[currentQuestion]['rightAnswer'];
+    let idRightAnswer = 'answerBox'+correctAnswer;
+    let backgroundElement = document.getElementById('quizContent');
     
+    if(lastCharacterofID == correctAnswer) {
+        this.style.backgroundColor ='#7cec7c80';
+        backgroundElement.style ='background-image: url("https://acegif.com/wp-content/gif/confetti-4.gif")';
+        correctAnswers ++;
+    } else {
+        this.style.backgroundColor ='#e0153d66';
+        document.getElementById(idRightAnswer).style.backgroundColor='#7cec7c80';
+    }    
+    removeTheEventListeners();
 }
+    
+function removeTheEventListeners(){
+    document.getElementById('answerBox1').removeEventListener('click', answerSelection);
+    document.getElementById('answerBox2').removeEventListener('click', answerSelection);
+    document.getElementById('answerBox3').removeEventListener('click', answerSelection);
+    document.getElementById('answerBox4').removeEventListener('click', answerSelection);
+}  
+    
+    
+    
+    
+    
 
 
 

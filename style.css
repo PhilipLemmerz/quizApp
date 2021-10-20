@@ -31,3 +31,20 @@ body {
     margin-top: 2rem;
     display: none;
 }
+
+#resultBoxinnerDiv {
+    text-align: center;
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 2px #7cec7c80 solid;       
+} 
+
+#resultPopup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80vh;
+    background-image: url('https://acegif.com/wp-content/gif/confetti-4.gif');
+}
+

@@ -3,7 +3,6 @@
  */
 
 let questions = [
-
     {
         "question": "Wer hat HTML erfunden?",
         "answer1": "Robbie Williams",
@@ -68,8 +67,7 @@ let questions = [
         "answer4": "100 = let rate;",
         "rightAnswer": 2
     },
-]
-
+];
 /**
  * global variables
  */
@@ -102,7 +100,6 @@ function addTheEventListener() {
  * End Event-Listers
  */
 
-
 function insertQuestionAndAnswer() {
     checkAnswerGiven = false;
     let questionElement = document.getElementById('questionText');
@@ -126,16 +123,16 @@ function answerSelection() {
     if (lastCharacterofID == correctAnswer) {
         this.style.backgroundColor = '#7cec7c80';
         backgroundElement.style = 'background-image: url("https://acegif.com/wp-content/gif/confetti-4.gif")';
-        document.getElementById('noAnswerGivenDiv').style = 'display: none';
         correctAnswers++;
     } else {
         this.style.backgroundColor = '#e0153d66';
         document.getElementById(idRightAnswer).style.backgroundColor = '#7cec7c80';
     }
     removeTheEventListeners();
-    document.getElementById('nextQuestionBTN').classList.remove('disabled');
+    document.getElementById('noAnswerGivenDiv').style.display = 'none'; /**hide the info-Box "noAnswergiven" */
+    document.getElementById('nextQuestionBTN').classList.remove('disabled'); /** enable the nextQuestion Button */
     checkAnswerGiven = true;
-
+    ifQuizEndShowResultBTN();
 }
 
 function removeTheEventListeners() {
@@ -144,31 +141,92 @@ function removeTheEventListeners() {
     document.getElementById('answerBox3').removeEventListener('click', answerSelection);
     document.getElementById('answerBox4').removeEventListener('click', answerSelection);
 }
-
+/**execute if user clicks "nextQuerstion" Button */
 function nextQuestion() {
-    if (checkAnswerGiven == true) {
+    if (checkAnswerGiven == true && currentQuestion < 7) {
         currentQuestion++;
         insertQuestionAndAnswer();
         addTheEventListener();
         changeStyleToDefault();
     }
-    else {
+    /** if no aswer ist seleected*/
+    else if (checkAnswerGiven == false) {
         document.getElementById('noAnswerGivenDiv').style = 'display: block';
     }
+    /**last question is answerd call result Function */
+    else {
+        result();
+    }
 }
 
+/**when next Question is shown, the Design must change To default */
 function changeStyleToDefault() {
     for (let i = 0; i < answerCard.length; i++) {
-        answerCard[i].style.backgroundColor = 'white';
+        answerCard[i].style.backgroundColor = 'white'; /**Color of  Cards change to white */
     }
-    document.getElementById('quizContent').style.backgroundImage ='none';
+    document.getElementById('quizContent').style.backgroundImage = 'none'; /**confetti stops */
 }
 
+/**if last Question done BTN change to Result BTN */
+function ifQuizEndShowResultBTN() {
+    let nextQuestionBTN = document.getElementById('nextQuestionBTN');
+    if (currentQuestion == (questions.length - 1)) {
+        nextQuestionBTN.textContent = 'Ergebnis anzeigen';
+        nextQuestionBTN.style.backgroundColor = 'green';
+        nextQuestionBTN.style.border = 'green';
+    } else {
+        /**change button style to default style */
+        nextQuestionBTN.textContent = 'nächste Frage';
+        nextQuestionBTN.style.backgroundColor = '';
+        nextQuestionBTN.style.border = '';
+    }
+}
 
+/** creates the result Content */
+function result() {
+    let currentContent = document.getElementById('quizContent');
+    /**hide the current question content*/
+    currentContent.classList.remove('d-flex');
+    currentContent.classList.add('d-none');
 
+    displayResultBox();   
+}
 
+function displayResultBox(){
+    let parentBox = document.getElementById('outerContentDiv');
+    /**create a new div element with the result */
+    let resultBox = document.createElement('div');
+    resultBox.setAttribute('id', 'resultPopup');
+    resultBox.innerHTML = `
+         <div id="resultBoxinnerDiv" class="bg-light">
+             <h4> Herzlichen Glückwunsch </h4>
+             <p> Du hast <strong>${correctAnswers}</strong> von insgesamt <strong>${questions.length}</strong> Fragen 
+                 richtig beantwortet
+             </p>
+             <button id="startAgainButton" onclick="startAgain()" type="button" class="btn btn-primary"> neu starten </button>
+         </div>
+     `;   
+    parentBox.appendChild(resultBox);
+}
 
-
+/** function restart the Quiz */
+function startAgain() {
+    currentQuestion = 0;
+    correctAnswers = 0;
+    let parentBox = document.getElementById('outerContentDiv');
+    let resultBox = document.getElementById('resultPopup');
+    let quizContent = document.getElementById('quizContent');    
+    /**delete the ResultBox completely */
+    parentBox.removeChild(resultBox);    
+    /**display the quizContent again */
+    quizContent.classList.remove('d-none');
+    quizContent.classList.add('d-flex');    
+    /** turn result button into next question button */
+    ifQuizEndShowResultBTN();
+    /**show default colors of cards again*/
+    changeStyleToDefault();
+    init();
+}
 
 
 

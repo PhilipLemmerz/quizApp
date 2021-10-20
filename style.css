@@ -26,3 +26,8 @@ body {
 .card:hover{
     cursor: pointer;
 }
+
+#noAnswerGivenDiv {
+    margin-top: 2rem;
+    display: none;
+}

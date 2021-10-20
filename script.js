@@ -37,7 +37,7 @@ let questions = [
         "rightAnswer": 3
     },
     {
-        "question": "Wie stellt man Text fett dar?",
+        "question": "Wie stellt man Text AM BESTEN fett dar?",
         "answer1": "<em> Tag",
         "answer2": "<b> Tag",
         "answer3": "<i> Tag",
@@ -77,71 +77,97 @@ let questions = [
 let currentQuestion = 0;
 let answerCard = document.getElementsByClassName('card');
 let correctAnswers = 0;
+let checkAnswerGiven;
 
 /** load autmomaticly after DOM is loaded */
 function init() {
     insertQuestionAndAnswer();
+    addTheEventListener();
 }
 
 /**
  * Event-Listeners
  */
 addEventListener('load', init);
-/**Events - click on answerCards */
-document.getElementById('answerBox1').addEventListener('click', answerSelection);
-document.getElementById('answerBox2').addEventListener('click', answerSelection);
-document.getElementById('answerBox3').addEventListener('click', answerSelection);
-document.getElementById('answerBox4').addEventListener('click', answerSelection);
-
+/**click-on-answer EVENT */
+function addTheEventListener() {
+    document.getElementById('answerBox1').addEventListener('click', answerSelection);
+    document.getElementById('answerBox2').addEventListener('click', answerSelection);
+    document.getElementById('answerBox3').addEventListener('click', answerSelection);
+    document.getElementById('answerBox4').addEventListener('click', answerSelection);
+    /**next question EVENT */
+    document.getElementById('nextQuestionBTN').addEventListener('click', nextQuestion);
+}
+/**
+ * End Event-Listers
+ */
 
 
 function insertQuestionAndAnswer() {
+    checkAnswerGiven = false;
     let questionElement = document.getElementById('questionText');
     let answerElements = document.getElementsByClassName('card-text');
-
     /**Insert the Question */
     questionElement.textContent = questions[currentQuestion]['question'];
-
     /**Insert the Answers */
     for (i = 0; i < answerElements.length; i++) {
-        answerElements[i].textContent = questions[currentQuestion]['answer' + (i + 1)];        
+        answerElements[i].textContent = questions[currentQuestion]['answer' + (i + 1)];
     }
 }
-
-
-
-
 
 /**function evaluate if selected answer is correct */
 function answerSelection() {
     let clickedElementId = this.id;
-    lastCharacterofID = clickedElementId.slice(-1);
+    let lastCharacterofID = clickedElementId.slice(-1);
     let correctAnswer = questions[currentQuestion]['rightAnswer'];
-    let idRightAnswer = 'answerBox'+correctAnswer;
+    let idRightAnswer = 'answerBox' + correctAnswer;
     let backgroundElement = document.getElementById('quizContent');
-    
-    if(lastCharacterofID == correctAnswer) {
-        this.style.backgroundColor ='#7cec7c80';
-        backgroundElement.style ='background-image: url("https://acegif.com/wp-content/gif/confetti-4.gif")';
-        correctAnswers ++;
+    /**if answer is correct change the Colors */
+    if (lastCharacterofID == correctAnswer) {
+        this.style.backgroundColor = '#7cec7c80';
+        backgroundElement.style = 'background-image: url("https://acegif.com/wp-content/gif/confetti-4.gif")';
+        document.getElementById('noAnswerGivenDiv').style = 'display: none';
+        correctAnswers++;
     } else {
-        this.style.backgroundColor ='#e0153d66';
-        document.getElementById(idRightAnswer).style.backgroundColor='#7cec7c80';
-    }    
+        this.style.backgroundColor = '#e0153d66';
+        document.getElementById(idRightAnswer).style.backgroundColor = '#7cec7c80';
+    }
     removeTheEventListeners();
+    document.getElementById('nextQuestionBTN').classList.remove('disabled');
+    checkAnswerGiven = true;
+
 }
-    
-function removeTheEventListeners(){
+
+function removeTheEventListeners() {
     document.getElementById('answerBox1').removeEventListener('click', answerSelection);
     document.getElementById('answerBox2').removeEventListener('click', answerSelection);
     document.getElementById('answerBox3').removeEventListener('click', answerSelection);
     document.getElementById('answerBox4').removeEventListener('click', answerSelection);
-}  
-    
-    
-    
-    
-    
+}
+
+function nextQuestion() {
+    if (checkAnswerGiven == true) {
+        currentQuestion++;
+        insertQuestionAndAnswer();
+        addTheEventListener();
+        changeStyleToDefault();
+    }
+    else {
+        document.getElementById('noAnswerGivenDiv').style = 'display: block';
+    }
+}
+
+function changeStyleToDefault() {
+    for (let i = 0; i < answerCard.length; i++) {
+        answerCard[i].style.backgroundColor = 'white';
+    }
+    document.getElementById('quizContent').style.backgroundImage ='none';
+}
+
+
+
+
+
 
 
 

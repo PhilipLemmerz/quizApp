@@ -76,13 +76,14 @@ let currentQuestion = 0;
 let answerCard = document.getElementsByClassName('card');
 let correctAnswers = 0;
 let checkAnswerGiven;
-
+let audioCorrectAnswer = new Audio ('https://freesound.org/data/previews/243/243701_3752922-lq.mp3');
+let audioWrongAnswer =  new Audio ('https://freesound.org/data/previews/420/420999_7614679-lq.mp3');
 /** load autmomaticly after DOM is loaded */
 function init() {
     insertQuestionAndAnswer();
     addTheEventListener();
+    screenBreakpoint();
 }
-
 /**
  * Event-Listeners
  */
@@ -95,6 +96,8 @@ function addTheEventListener() {
     document.getElementById('answerBox4').addEventListener('click', answerSelection);
     /**next question EVENT */
     document.getElementById('nextQuestionBTN').addEventListener('click', nextQuestion);
+    /**change Screen-Widht EVENT */
+    window.addEventListener('resize', screenBreakpoint);
 }
 /**
  * End Event-Listers
@@ -123,10 +126,12 @@ function answerSelection() {
     if (lastCharacterofID == correctAnswer) {
         this.style.backgroundColor = '#7cec7c80';
         backgroundElement.style = 'background-image: url("https://acegif.com/wp-content/gif/confetti-4.gif")';
+        audioCorrectAnswer.play();
         correctAnswers++;
     } else {
         this.style.backgroundColor = '#e0153d66';
         document.getElementById(idRightAnswer).style.backgroundColor = '#7cec7c80';
+        audioWrongAnswer.play();
     }
     removeTheEventListeners();
     document.getElementById('noAnswerGivenDiv').style.display = 'none'; /**hide the info-Box "noAnswergiven" */
@@ -148,6 +153,7 @@ function nextQuestion() {
         insertQuestionAndAnswer();
         addTheEventListener();
         changeStyleToDefault();
+        animateProgressbar();
     }
     /** if no aswer ist seleected*/
     else if (checkAnswerGiven == false) {
@@ -188,7 +194,6 @@ function result() {
     /**hide the current question content*/
     currentContent.classList.remove('d-flex');
     currentContent.classList.add('d-none');
-
     displayResultBox();   
 }
 
@@ -225,9 +230,42 @@ function startAgain() {
     ifQuizEndShowResultBTN();
     /**show default colors of cards again*/
     changeStyleToDefault();
+    animateProgressbar();
     init();
 }
 
+function animateProgressbar() {
+    /**calculate the progrss in % */
+    let value = currentQuestion/(questions.length);
+    let currentProgress = Math.round(value * 10) / 10;
+    let percentValue = currentProgress*100+'%';
+    
+    let progressBar = document.getElementById('progressBar');
+    /**set width of progessbar = percentValue */
+    progressBar.style.width = percentValue; 
+    document.getElementById('progressBar').textContent = percentValue;
+    console.log(percentValue);
+    /**if progress is 0% push number a bit to the right */
+    if(percentValue== 0+'%'){
+        progressBar.style.marginLeft='1rem';
+    }
+    else {
+        progressBar.style.marginLeft='0';
+    }    
+}
+
+/**width < 1000px use fullscreen */
+function screenBreakpoint() {
+    let body = document.querySelector('body');
+    let outerDiv = document.getElementById('outerContentDiv');
+    if(window.innerWidth<1000){
+        body.classList.remove('container');
+        outerDiv.classList.remove('container');
+    } else {
+        body.classList.add('container');
+        outerDiv.classList.add('container');
+    }
+}
 
 
 
